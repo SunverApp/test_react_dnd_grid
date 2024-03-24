@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/test_react_dnd_grid/static/css/main.2bb55ed7.css",
-    "main.js": "/test_react_dnd_grid/static/js/main.d4909f9c.js",
+    "main.css": "/test_react_dnd_grid/static/css/main.3823047c.css",
+    "main.js": "/test_react_dnd_grid/static/js/main.b648af25.js",
     "index.html": "/test_react_dnd_grid/index.html",
-    "main.2bb55ed7.css.map": "/test_react_dnd_grid/static/css/main.2bb55ed7.css.map",
-    "main.d4909f9c.js.map": "/test_react_dnd_grid/static/js/main.d4909f9c.js.map"
+    "main.3823047c.css.map": "/test_react_dnd_grid/static/css/main.3823047c.css.map",
+    "main.b648af25.js.map": "/test_react_dnd_grid/static/js/main.b648af25.js.map"
   },
   "entrypoints": [
-    "static/css/main.2bb55ed7.css",
-    "static/js/main.d4909f9c.js"
+    "static/css/main.3823047c.css",
+    "static/js/main.b648af25.js"
   ]
 }
