@@ -120,7 +120,7 @@ export default function App() {
                     ref={provided.innerRef}
                     className={`${
                       debugMode ? LINES_COLORS[index % LINES_COLORS.length] : ""
-                    } w-full h-40 flex items-center justify-start gap-x-2 border border-gray-200`}
+                    } w-full p-2 flex items-center justify-start gap-x-2 border border-gray-200`}
                   >
                     {debugMode && <p>{`droppable-${index}`}</p>}
                     {items
