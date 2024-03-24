@@ -140,9 +140,19 @@ export default function App() {
                               ref={provided.innerRef}
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
-                              className={`size-32 ${item.color} flex items-center justify-center font-bold`}
+                              className={`size-32 ${item.color} flex flex-col items-center justify-center`}
                             >
-                              {item.label}
+                              <span className="font-bold">{item.label}</span>
+                              {debugMode && (
+                                <div className="font-light self-start pl-2">
+                                  <span>{`line index: ${itemIndex} `}</span>
+                                  <span>
+                                    {`global index: ${
+                                      index * maxItemsPerLine + itemIndex
+                                    }`}
+                                  </span>
+                                </div>
+                              )}
                             </div>
                           )}
                         </Draggable>
