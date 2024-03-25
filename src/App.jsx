@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 
-import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
+import {
+  DragDropContext,
+  DragUpdate,
+  Draggable,
+  DraggableLocation,
+  DropResult,
+  Droppable,
+} from "@hello-pangea/dnd";
 
 // The 'data' we want to display in a dnd grid
 const DEFAULT_ITEMS_LIST = [
@@ -32,6 +39,41 @@ export default function App() {
     Math.ceil(items.length / maxItemsPerLine)
   );
 
+  const computeIndex = (source, destination) => {
+    const srcOffset = Number(source.droppableId.split("-")[1]);
+    const destOffset = Number(destination.droppableId.split("-")[1]);
+
+    let srcIndex = source.index + (srcOffset * maxItemsPerLine);
+    let destiIndex = destination.index  + (destOffset * maxItemsPerLine);
+
+    // if it stays on the same line -> easiest case
+    if (srcOffset === destOffset) {
+      return [srcIndex, destiIndex];
+    }
+
+    // line 0 index 0 -> nothing to do
+    if (destination.index === 0 && destOffset > 0) {
+      return
+    }
+
+    // last index of the line -> nothing to do
+    if (destination.index === maxItemsPerLine - 1 && destOffset > 0) {
+      destiIndex -= 1;
+      return
+    }
+
+
+    // if (destination.index === 0 && destOffset > 0) {
+    //   destiIndex -= 1;
+    // }
+
+    // if (line > 0 && lineIndex === 0) {
+    //   index -= 1;
+    // }
+
+    return [srcIndex, destiIndex];
+  };
+
   const handleDragEnd = (result) => {
     const { source, destination } = result;
 
@@ -39,18 +81,48 @@ export default function App() {
       return;
     }
 
-    const srcOffset = Number(source.droppableId.split("-")[1]);
-    const destOffset = Number(destination.droppableId.split("-")[1]);
-
-    const srcIndex = srcOffset * maxItemsPerLine + source.index;
-    const destIndex = destOffset * maxItemsPerLine + destination.index;
+    const [srcIndex, destIndex] = computeIndex(source, destination);
 
     if (srcIndex === destIndex) {
       return;
     }
 
-    // console.log(source, destination)
-    console.log(srcIndex, destIndex);
+    console.log(srcIndex, " -> ", destIndex);
+
+    const itemsCopy = [...items];
+    const [removed] = itemsCopy.splice(srcIndex, 1);
+    itemsCopy.splice(destIndex, 0, removed);
+
+    for (let i = 0; i < itemsCopy.length; i++) {
+      itemsCopy[i].order = i + 1;
+    }
+    setItems(itemsCopy);
+  };
+
+  const handleDragUpdate = (update) => {
+    return
+    if (!update.destination) {
+      return;
+    }
+
+    if (
+      update.destination === null ||
+      JSON.stringify(update.source) === JSON.stringify(update.destination)
+    ) {
+      return;
+    }
+
+    const srcOffset = Number(update.source.droppableId.split("-")[1]);
+    const destOffset = Number(update.destination.droppableId.split("-")[1]);
+
+    const srcIndex = srcOffset * maxItemsPerLine + update.source.index;
+    const destIndex = destOffset * maxItemsPerLine + update.destination.index;
+
+    console.log(destIndex)
+
+    if (srcIndex === destIndex) {
+      return;
+    }
 
     const itemsCopy = [...items];
     const [removed] = itemsCopy.splice(srcIndex, 1);
@@ -61,6 +133,7 @@ export default function App() {
     }
     // console.log(itemsCopy)
     setItems(itemsCopy);
+    console.log(update);
   };
 
   return (
@@ -106,7 +179,10 @@ export default function App() {
       </div>
 
       <div className="flex items-center justify-center flex-col">
-        <DragDropContext onDragEnd={handleDragEnd}>
+        <DragDropContext
+          onDragEnd={handleDragEnd}
+          onDragUpdate={handleDragUpdate}
+        >
           {Array.from(Array(nbLinesNeeded).keys()).map((index) => {
             return (
               <Droppable
